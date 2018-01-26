@@ -6,9 +6,11 @@ use GuzzleHttp\Client;
 
 abstract class Service
 {
+
   protected $client;
 
-  public function __construct(Client $client){
+  public function __construct(Client $client)
+  {
     $this->client = $client;
   }
 
@@ -24,5 +26,4 @@ abstract class Service
   {
     return $this->getUserByCode($code);
   }
-
 }

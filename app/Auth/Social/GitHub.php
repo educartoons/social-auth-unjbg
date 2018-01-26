@@ -2,22 +2,21 @@
 
 namespace App\Auth\Social;
 
-class Github extends Service
+class GitHub extends Service
 {
+
   public function getAuthorizeUrl()
-  {  
-    return 'https://github.com/login/oauth/authorize?client_id='.CLIENT_ID.'&redirect_uri=http://localhost:8888/social-auth-unjbg/&scope=user,user:email&state=abc';
+  {
+    return 'https://github.com/login/oauth/authorize?client_id=aedf310ffb19388de5d0&redirect_uri=http://localhost:8888/social-auth&scope=user,user:email&state=abc';
   }
 
   public function getUserByCode($code)
   {
-
     $token = $this->getAccessTokenFromCode($code);
 
     $user = $this->getUserByToken($token->access_token);
 
-    return $this->normalize($user);
-
+    return $this->normalizeUser($user);
   }
 
   public function getUserByToken($token)
@@ -31,17 +30,17 @@ class Github extends Service
     return json_decode($response);
   }
 
-  public function getAccessTokenFromCode($code)
+  protected function getAccessTokenFromCode($code)
   {
     $response = $this->client->request('GET', 'https://github.com/login/oauth/access_token', [
       'query' => [
-        'client_id' => CLIENT_ID,
-        'client_secret' => CLIENT_SECRET,
-        'redirect_uri' => 'http://localhost:8888/social-auth-unjbg',
+        'client_id' => '',
+        'client_secret' => '',
+        'redirect_uri' => 'http://localhost:8888/social-auth',
         'code' => $code,
-        'state' => 'abc'
+        'state' => ''
       ],
-      'headers' =>[
+      'headers' => [
         'accept' => 'application/json'
       ]
     ])->getBody();
@@ -49,7 +48,7 @@ class Github extends Service
     return json_decode($response);
   }
 
-  public function normalize($user)
+  protected function normalizeUser($user)
   {
     return (object) [
       'id' => $user->id,
